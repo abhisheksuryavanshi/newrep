@@ -39,49 +39,21 @@ def webhook():
 
     print("Request:")
     print(json.dumps(req, indent=4))
-
-    res = makeWebhookResult(req)
-
-    res = json.dumps(res, indent=4)
-    print(res)
-    r = make_response(res)
-    r.headers['Content-Type'] = 'application/json'
-    return r
-
-def processRequest(req):
-    if req.get("result").get("action") != "my-timetable":
-        return {}
     baseurl = "http://abhishek7.pythonanywhere.com/days/"
-    number = makeYqlQuery(req)
-    if number is None:
-        return {}
-    yql_url = baseurl + number
-    result = urlopen(yql_url).read()
-    data = json.loads(result)
-    res = makeWebhookResult(data)
-    return res
 
-
-def makeYqlQuery(req):
-    result = req.get("result")
-    parameters = result.get("parameters")
-    number = parameters.get("number-integer")
-    if number is None:
-        return None
-
-    return number
-
-
-def makeWebhookResult(data):
-
-
-    return {
+    res = {
         "speech": "5624",
         "displayText": "1234",
         # "data": data,
         # "contextOut": [],
         "source": "my-timetable"
     }
+
+    res = json.dumps(res, indent=4)
+    print(res)
+    r = make_response(res)
+    r.headers['Content-Type'] = 'application/json'
+    return r
 
 
 if __name__ == '__main__':
