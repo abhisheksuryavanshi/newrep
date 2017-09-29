@@ -40,10 +40,17 @@ def webhook():
     print("Request:")
     print(json.dumps(req, indent=4))
     baseurl = "http://abhishek7.pythonanywhere.com/days/"
+    result = req.get("result")
+    parameters = result.get("parameters")
+    number = parameters.get("number-integer")
+
+    yql_url = baseurl + urlencode({'q': number})
+    result = urlopen(yql_url).read()
+    data = json.loads(result)
 
     res = {
-        "speech": "5624",
-        "displayText": "1234",
+        "speech": data.get('day_name'),
+        "displayText": data.get('slot_1'),
         # "data": data,
         # "contextOut": [],
         "source": "my-timetable"
