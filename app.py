@@ -44,7 +44,7 @@ def webhook():
     parameters = result.get("parameters")
     number = parameters.get("number-integer")
 
-    yql_url = baseurl + urlencode({'q': number})
+    yql_url = baseurl + number
     result = urlopen(yql_url).read()
     data = json.loads(result)
 
