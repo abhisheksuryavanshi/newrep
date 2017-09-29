@@ -1,6 +1,27 @@
-#!/usr/bin/env python
+# -*- coding:utf8 -*-
+# !/usr/bin/env python
+# Copyright 2017 Google Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-import urllib
+from __future__ import print_function
+from future.standard_library import install_aliases
+install_aliases()
+
+from urllib.parse import urlparse, urlencode
+from urllib.request import urlopen, Request
+from urllib.error import HTTPError
+
 import json
 import os
 
@@ -27,35 +48,45 @@ def webhook():
     r.headers['Content-Type'] = 'application/json'
     return r
 
-def makeWebhookResult(req):
-    if req.get("result").get("action") != "class-assignment":
+def processRequest(req):
+    if req.get("result").get("action") != "my-timetable":
         return {}
+    baseurl = "http://abhishek7.pythonanywhere.com/days/"
+    number = makeYqlQuery(req)
+    if number is None:
+        return {}
+    yql_url = baseurl + number
+    result = urlopen(yql_url).read()
+    data = json.loads(result)
+    res = makeWebhookResult(data)
+    return res
+
+
+def makeYqlQuery(req):
     result = req.get("result")
     parameters = result.get("parameters")
-    zone = parameters.get("subjects")
+    number = parameters.get("number-integer")
+    if number is None:
+        return None
 
-    cost = {'FLAT':'20th April', 'Software':'5th May', 'Algorithms':1, 'COA':1}
-    
-    if cost[zone] != 1:
-        speech = "The deadline for " + zone + " assignment is " + str(cost[zone]) + "."
-    if cost[zone] == 1:
-        speech = "The assignment for " + zone + " is done""."
+    return number
 
-    print("Response:")
-    print(speech)
+
+def makeWebhookResult(data):
+
 
     return {
-        "speech": speech,
-        "displayText": speech,
-        #"data": {},
+        "speech": "5624",
+        "displayText": "1234",
+        # "data": data,
         # "contextOut": [],
-        "source": "apiai-onlinestore-shipping"
+        "source": "my-timetable"
     }
 
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
 
-    print ("Starting app on port %d" %port)
+    print("Starting app on port %d" % port)
 
-    app.run(debug=True, port=port, host='0.0.0.0')
+    app.run(debug=False, port=port, host='0.0.0.0')
