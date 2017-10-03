@@ -37,12 +37,12 @@ app = Flask(__name__)
 def webhook():
    req = request.get_json(silent=True, force=True)
 
-    print("Request:")
-    print(json.dumps(req, indent=4))
-    baseurl = "http://abhishek7.pythonanywhere.com/days/"
-    result = req.get("result")
-    parameters = result.get("parameters")
-    number = parameters.get("number-integer")
+    # print("Request:")
+    # print(json.dumps(req, indent=4))
+    # baseurl = "http://abhishek7.pythonanywhere.com/days/"
+    # result = req.get("result")
+    # parameters = result.get("parameters")
+    # number = parameters.get("number-integer")
 
     res = {
         "speech": 9999,
