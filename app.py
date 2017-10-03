@@ -37,9 +37,29 @@ app = Flask(__name__)
 def webhook():
     req = request.get_json(silent=True, force=True)
 
+    print("Request:")
+    print(json.dumps(req, indent=4))
+    baseurl = "http://abhishek7.pythonanywhere.com/days/"
+    result = req.get("result")
+    parameters = result.get("parameters")
+    number = parameters.get("number-integer")
+
+    yql_url = baseurl + number
+    result = urlopen(yql_url).read()
+    data = json.loads(result)
+
+    speech = "Today is: "+ data.get('day_name') +"day\n"+ \
+            "Today's schedule:" +"\n" + \
+            "Slot 1: " + data.get('slot_1') +"\n" + \
+            "Slot 2: " + data.get('slot_2') +"\n" + \
+            "Slot 3: " + data.get('slot_3') +"\n" + \
+            "Slot 4: " + data.get('slot_4') +"\n" + \
+            "Slot 5: " + data.get('slot_5') +"\n" + \
+            "Slot 6: " + data.get('slot_6')
+
     res = {
-        "speech":5241,
-        "displayText":6895,
+        "speech": speech,
+        "displayText": data.get('slot_1'),
         # "data": data,
         # "contextOut": [],
         "source": "my-timetable"
@@ -50,8 +70,6 @@ def webhook():
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
-    
-
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
