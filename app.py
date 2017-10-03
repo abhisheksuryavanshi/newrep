@@ -37,16 +37,20 @@ app = Flask(__name__)
 def webhook():
    req = request.get_json(silent=True, force=True)
 
-    # print("Request:")
-    # print(json.dumps(req, indent=4))
-    # baseurl = "http://abhishek7.pythonanywhere.com/days/"
-    # result = req.get("result")
-    # parameters = result.get("parameters")
-    # number = parameters.get("number-integer")
+    print("Request:")
+    print(json.dumps(req, indent=4))
+    baseurl = "http://abhishek7.pythonanywhere.com/days/"
+    result = req.get("result")
+    parameters = result.get("parameters")
+    rollnumber = parameters.get("rollnumber")
+   
+
+
+    speech = "Today is: "+ rollnumber +"day\n"
 
     res = {
-        "speech": 9999,
-        "displayText": 9595,
+        "speech": speech,
+        "displayText": data.get('slot_1'),
         # "data": data,
         # "contextOut": [],
         "source": "my-timetable"
