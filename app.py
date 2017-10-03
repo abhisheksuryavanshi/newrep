@@ -37,20 +37,9 @@ app = Flask(__name__)
 def webhook():
     req = request.get_json(silent=True, force=True)
 
-    print("Request:")
-    print(json.dumps(req, indent=4))
-    baseurl = "http://abhishek7.pythonanywhere.com/days/"
-    result = req.get("result")
-    parameters = result.get("parameters")
-    number = parameters.get("number-integer")
-
-    yql_url = baseurl + number
-    result = urlopen(yql_url).read()
-    data = json.loads(result)
-
     res = {
-        "speech": data.get('slot_1'),
-        "displayText": data.get('slot_1'),
+        "speech":5241,
+        "displayText":6895,
         # "data": data,
         # "contextOut": [],
         "source": "my-timetable"
@@ -61,6 +50,7 @@ def webhook():
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
+    
 
 
 if __name__ == '__main__':
